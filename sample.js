@@ -36,8 +36,32 @@ var setting = [{
     },
     status:{
         status:'success',
-        amount:100,
-        id:1
+        amount:{
+            stub_type:'select',
+            choice:[100,200,300,400],
+            type:'random' //'liner'
+        },
+        id:{
+            stub_type:'unique_num',
+            starting_num:100,
+            increments:10,
+            max_num:8000,
+            min_num:1000,
+            type:'incremental' //'random'
+        },
+        text:{
+            stub_type:'lipsum',
+            max_char_length:100
+        },
+        date:{
+            stub_type:'date',
+            template:'Y-M-D',
+            type:'random' //incremental,
+            starting_date:'2014-01-01',
+            increments:1,
+            max_date:'2014-01-01',
+            min_date:'2014-01-31',
+        }
     }
 }]
 
