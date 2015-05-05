@@ -23,13 +23,15 @@ function parseData(obj, trail, result) {
                 trail.push(key);
                 result.push({
                     trail:JSON.stringify(trail),
+                    text:obj[key],
                     key:text.match(/^\/\/\/.*(\*)/)[0].replace('///','').replace('*',''),
                     repeat:parseInt(text.match(/\d+\/\/\/$/)[0].replace('///',''),10)
                 });
-                trail.length = 0;
+                trail.pop();
             }
         }
     }
+    trail.length = 0;
     return result;
 }
 
@@ -38,9 +40,10 @@ function cleandata(set){
     if(!set.data){return log.dataFieldNotSpecified(set.path);}
 
     var parseResult = parseData(set.data,[],[]).map(function(d){d.trail = JSON.parse(d.trail);return d;});
-
+    console.log(parseResult)
     parseResult.forEach(function(r){
-        var data = [r.trail[r.trail.length-1],1];
+
+        var data = [];
         for (var j=0;j<r.repeat;j++){
             data.push(set[r.key]);
         }
@@ -48,8 +51,8 @@ function cleandata(set){
         for (var i=0;i<r.trail.length-1;i++){
             temp = temp[r.trail[i]];
         }
-
-        temp.splice.apply(temp, data);
+        var pointer = [temp.indexOf(r.text),1]
+        temp.splice.apply(temp, pointer.concat(data));
     });
 
    return set.data;

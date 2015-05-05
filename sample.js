@@ -5,7 +5,7 @@ var setting = [{
     path:'/data',
     data: {
         status: 'success',
-        log:['///log*5///'],
+        log:['///log*5///','/// info*10 ///'],
         data:{
             active: true,
             metadata: {
@@ -35,6 +35,7 @@ var setting = [{
         log:['///status*5///'],
     },
     status:{
+        status:'success',
         amount:100,
         id:1
     }
