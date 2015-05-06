@@ -1,6 +1,16 @@
 var http = require('http');
+var crypto = require('crypto');
 var log = require('./message.js');
 
+
+function generateId(){
+    return crypto.randomBytes(16).toString('hex')
+}
+
+function shuffle(o) {
+    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
 
 function checkFields(endpoint, index){
     var state = true;
@@ -37,6 +47,7 @@ function processData(obj, result) {
 
 function cloneAndInvoke(obj){
     // make deep copy of obj
+    // if function(that means it's template generator !) invoke the function.
     var clone = Array.isArray(obj) ? [] : {};
     for (var key in obj) {
         if (obj[key] !== null && typeof(obj[key])=="object") {
@@ -61,7 +72,6 @@ function createResonseData(instruction,templates){
     });
 }
 
-
 function processTemplates(templates){
 
     function parseTemplate(obj) {
@@ -71,6 +81,7 @@ function processTemplates(templates){
                     if(!tDict[obj[key].stub_type]){
                         log.stubTypeNotFound(obj[key].stub_type)
                     }else{
+                        obj[key].id = generateId();
                         obj[key] = tDict[obj[key].stub_type](obj[key])
                     }
                 }else{
@@ -88,7 +99,27 @@ function processTemplates(templates){
 
 var tDict = {
     select: function(obj){
-        return function(){return 'aaaa'}
+        var type = {
+            random:function(){
+                return obj.choice[Math.floor(Math.random() * obj.choice.length)];
+            },
+            liner: function(){
+                var el = obj.choice.shift();
+                obj.choice.push(el);
+                return el;
+            },
+            random_unique: function(){
+                if(!obj.randomized){obj.randomized = shuffle(obj.choice.slice());}
+                var el = obj.randomized.shift();
+                if(el===undefined){
+                    log.notEnoughChoice('random_unique','choice');
+                    process.exit()
+                }
+                return el;
+            }
+        }
+        if(!type[obj.type]){ return log.noTemplateType('select', obj.type, Object.keys(type))}
+        return type[obj.type]
     },
     lipsum: function(obj){
         return obj
