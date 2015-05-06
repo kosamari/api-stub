@@ -36,6 +36,12 @@ var msg = {
     stubTypeNotFound: function(name){
         warning('Could not find '+name+' type ');
     },
+    noTemplateType: function(template, type, types){
+        warning('Template ' + template + ' has no type ' + type + ' try '+types.join(' or '))
+    },
+    notEnoughChoice: function(type, list){
+        err('run out of unique choice for '+type+' operation. please give enough elements for '+list)
+    },
     generalError : function(errorMessage){
         err(errorMessage);
     }
