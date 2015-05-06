@@ -1,73 +1,86 @@
 var http = require('http');
 var log = require('./message.js');
 
-function createData(opt){
-    var dict = {};
-    opt.forEach(function(set){
-        dict[set.path] = JSON.stringify(cleandata(set));
-    });
-    return dict;
+
+function checkFields(endpoint, index){
+    var state = true;
+    if(!endpoint.path){
+        state = false;
+        log.pathFieldNotSpecified(index);
+    }else if(!endpoint.data){
+        state = false;
+        log.dataFieldNotSpecified(endpoint.path);
+    }
+    return state;
 }
 
-function parseData(obj, trail, result) {
-    if(trail===undefined){trail = [];}
+
+function processData(obj, result) {
     if(result===undefined){result = [];}
     for (var key in obj) {
         if (obj[key] !== null && typeof(obj[key])=="object") {
-            trail.push(key);
-            parseData(obj[key], trail, result);
-        }else if(typeof(obj[key])==='string'){
+            processData(obj[key], result);
+        }else if(Array.isArray(obj) && typeof(obj[key])==='string'){
             var re = /^\/\/\/.*(\*)[0-9]*\/\/\/$/;
             var text = obj[key].split(" ").join("");
             if(re.test(text)){
-                trail.push(key);
                 result.push({
-                    trail:JSON.stringify(trail),
-                    text:obj[key],
+                    location:obj,
+                    index:key,
                     key:text.match(/^\/\/\/.*(\*)/)[0].replace('///','').replace('*',''),
-                    repeat:parseInt(text.match(/\d+\/\/\/$/)[0].replace('///',''),10)
+                    amount:parseInt(text.match(/\d+\/\/\/$/)[0].replace('///',''),10)
                 });
-                trail.pop();
             }
         }
     }
-    trail.length = 0;
     return result;
 }
 
 
-function cleandata(set){
-    if(!set.data){return log.dataFieldNotSpecified(set.path);}
-
-    var parseResult = parseData(set.data,[],[]).map(function(d){d.trail = JSON.parse(d.trail);return d;});
-    console.log(parseResult)
-    parseResult.forEach(function(r){
-
+function createResonseData(instruction,templates){
+    instruction.map(function(inst){
+        if(!templates[inst.key]){return log.templateNotSpecified(inst.key);}
         var data = [];
-        for (var j=0;j<r.repeat;j++){
-            data.push(set[r.key]);
+        for(var j=0;j<inst.amount;j++){
+            data.push(templates[inst.key]);
         }
-        var temp = set.data;
-        for (var i=0;i<r.trail.length-1;i++){
-            temp = temp[r.trail[i]];
-        }
-        var pointer = [temp.indexOf(r.text),1]
-        temp.splice.apply(temp, pointer.concat(data));
+        inst.location.splice.apply(inst.location, [inst.index, 1].concat(data));
     });
-
-   return set.data;
 }
 
 
-function API(opt){
+function processTemplates(templates){
+    return templates;
+}
+
+
+function Endpoint(config){
+    var apidata = config.data;
+    createResonseData(processData(apidata), processTemplates(config.templates));
+
+    function getJSONString(){
+        return JSON.stringify(apidata);
+    }
+
+    return {
+        getJSONString: getJSONString
+    };
+}
+
+function API(endpointsConfig){
     var portNum;
     var apiStatus = false;
     var startTime;
-    var data = createData(opt);
+    var endpoints = {};
+    endpointsConfig.map(function(data,i){
+        if(checkFields(data,i)){
+            endpoints[data.path] = new Endpoint(data);
+        }
+    });
     var server =  http.createServer(function (req, res) {
-        if(data[req.url]){
+        if(endpoints[req.url]){
             res.writeHead(200, {'Content-Type': 'application/json'});
-            res.end(data[req.url]);
+            res.end(endpoints[req.url].getJSONString());
         }
         res.writeHead(200, {'Content-Type': 'text/plain'});
         res.end('No Data Specified here');
@@ -83,7 +96,7 @@ function API(opt){
     function startAPI(port, callback){
         if(apiStatus === true){return log.apiAlreadyRunning(portNum);}
         if(port === undefined){ return log.portNotDefined();}
-        if(isNaN(port)){ return log.portNotNumber(port);}
+        if(isNaN(port)){ return log.portNaN(port);}
         portNum = port;
         server.listen(port,null,null,function(){
             apiStatus = true;
@@ -109,7 +122,8 @@ function API(opt){
         return {
             status : apiStatus,
             port : portNum,
-            running_since: startTime
+            running_since: startTime,
+            path : Object.keys(endpoints)
         };
     }
 

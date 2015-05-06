@@ -1,6 +1,5 @@
 var API = require('./api.js');
 
-
 var setting = [{
     path:'/data',
     data: {
@@ -14,18 +13,16 @@ var setting = [{
             }
         },
     },
-    lipsum:{
-        info: true,
-        log: false
-    },
-    info:{
-        media:'photo',
-        id:1,
-        editable:true,
-        message:'this is message'
-    },
-    log:{
-        test:'this is test'
+    templates:{
+        info:{
+            media:'photo',
+            id:1,
+            editable:true,
+            message:'this is message'
+        },
+        log:{
+            test:'this is test'
+        }
     }
 },
 {
@@ -34,43 +31,42 @@ var setting = [{
         status: 'success',
         log:['///status*5///'],
     },
-    status:{
-        status:'success',
-        amount:{
-            stub_type:'select',
-            choice:[100,200,300,400],
-            type:'random' //'liner'
-        },
-        id:{
-            stub_type:'unique_num',
-            starting_num:100,
-            increments:10,
-            max_num:8000,
-            min_num:1000,
-            type:'incremental' //'random'
-        },
-        text:{
-            stub_type:'lipsum',
-            max_char_length:100
-        },
-        date:{
-            stub_type:'date',
-            template:'Y-M-D',
-            type:'random' //incremental,
-            starting_date:'2014-01-01',
-            increments:1,
-            max_date:'2014-01-01',
-            min_date:'2014-01-31',
+    templates:{
+        status:{
+            status:'success',
+            amount:{
+                stub_type:'select',
+                choice:[100,200,300,400],
+                type:'random' //'liner'
+            },
+            id:{
+                stub_type:'unique_num',
+                starting_num:100,
+                increments:10,
+                max_num:8000,
+                min_num:1000,
+                type:'incremental', //'random'
+            },
+            text:{
+                stub_type:'lipsum',
+                max_char_length:100,
+            },
+            date:{
+                stub_type:'date',
+                template:'Y-M-D',
+                type:'random', //incremental,
+                starting_date:'2014-01-01',
+                increments:1,
+                max_date:'2014-01-01',
+                min_date:'2014-01-31',
+            }
         }
     }
-}]
+}];
 
-var apiserver = new API(setting)
-apiserver.start(3000)
-// console.log(apiserver.profile())
-// apiserver.start(3000,function(err, message){
-//     if(err) conaole.log(err);
-// })
+var apiserver = new API(setting);
+apiserver.start(3000, function(){
+    console.log(apiserver.profile.call(this));
+});
 // apiserver.port()
 // apiserver.stop()
-// apiserver.restart(setting)
