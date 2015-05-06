@@ -33,6 +33,9 @@ var msg = {
     templateNotSpecified: function(name){
         warning('Could not find '+name+' template ');
     },
+    stubTypeNotFound: function(name){
+        warning('Could not find '+name+' type ');
+    },
     generalError : function(errorMessage){
         err(errorMessage);
     }

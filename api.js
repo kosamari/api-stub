@@ -14,7 +14,6 @@ function checkFields(endpoint, index){
     return state;
 }
 
-
 function processData(obj, result) {
     if(result===undefined){result = [];}
     for (var key in obj) {
@@ -33,16 +32,30 @@ function processData(obj, result) {
             }
         }
     }
-    return result;
+    return result
 }
 
+function cloneAndInvoke(obj){
+    // make deep copy of obj
+    var clone = Array.isArray(obj) ? [] : {};
+    for (var key in obj) {
+        if (obj[key] !== null && typeof(obj[key])=="object") {
+            clone[key] = cloneAndInvoke(obj[key]);
+        }else if(typeof(obj[key])=="function"){
+            clone[key] = obj[key]();
+        }else{
+            clone[key] = obj[key];
+        }
+    }
+    return clone
+}
 
 function createResonseData(instruction,templates){
     instruction.map(function(inst){
         if(!templates[inst.key]){return log.templateNotSpecified(inst.key);}
         var data = [];
         for(var j=0;j<inst.amount;j++){
-            data.push(templates[inst.key]);
+            data.push(cloneAndInvoke(templates[inst.key]));
         }
         inst.location.splice.apply(inst.location, [inst.index, 1].concat(data));
     });
@@ -50,12 +63,46 @@ function createResonseData(instruction,templates){
 
 
 function processTemplates(templates){
+
+    function parseTemplate(obj) {
+        for (var key in obj) {
+            if (obj[key] !== null && typeof(obj[key])=="object") {
+                if(obj[key].stub_type){
+                    if(!tDict[obj[key].stub_type]){
+                        log.stubTypeNotFound(obj[key].stub_type)
+                    }else{
+                        obj[key] = tDict[obj[key].stub_type](obj[key])
+                    }
+                }else{
+                    parseTemplate(obj[key]);
+                }
+            }
+        }
+    }
+
+    Object.keys(templates).map(function(t){
+        parseTemplate(templates[t]);
+    })
     return templates;
 }
 
+var tDict = {
+    select: function(obj){
+        return function(){return 'aaaa'}
+    },
+    lipsum: function(obj){
+        return obj
+    },
+    unique_num: function(obj){
+        return obj
+    },
+    date: function(obj){
+        return obj
+    }
+}
 
 function Endpoint(config){
-    var apidata = config.data;
+    var apidata = cloneAndInvoke(config.data);
     createResonseData(processData(apidata), processTemplates(config.templates));
 
     function getJSONString(){

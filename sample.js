@@ -4,12 +4,12 @@ var setting = [{
     path:'/data',
     data: {
         status: 'success',
-        log:['///log*5///','/// info*10 ///'],
+        log:['///log*0///','/// info*0 ///'],
         data:{
             active: true,
             metadata: {
                 admin:false,
-                data:['/// info*10 ///']
+                data:['/// info*0 ///']
             }
         },
     },
@@ -29,15 +29,17 @@ var setting = [{
     path:'/api',
     data: {
         status: 'success',
-        log:['///status*5///'],
+        log:['///status*1///'],
     },
     templates:{
         status:{
             status:'success',
             amount:{
-                stub_type:'select',
-                choice:[100,200,300,400],
-                type:'random' //'liner'
+                data:{
+                    stub_type:'select',
+                    choice:[100,200,300,400],
+                    type:'random' //'liner'
+                }
             },
             id:{
                 stub_type:'unique_num',
