@@ -42,15 +42,12 @@ var msg = {
     notEnoughChoice: function(type, list){
         err('run out of unique choice for '+type+' operation. please give enough elements for '+list)
     },
-<<<<<<< Updated upstream:message.js
-=======
     notParseableDatetime: function(key, value){
         err('could not parse '+key+' ('+value+') please use JavaScript Date Object parseable string')
     },
     missingSettings: function(template, type, list){
         err(template+' ('+ type+') needs '+list.join(' and ')+'.')
     },
->>>>>>> Stashed changes:src/message.js
     generalError : function(errorMessage){
         err(errorMessage);
     }
