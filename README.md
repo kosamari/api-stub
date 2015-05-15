@@ -213,7 +213,7 @@ toYMDString | `2015-05-15`
 ### Yet another API mock up tool huh?
 Yep. I needed something I can generate unique data easily, quickly modify schema as I go, and avoid set up of database.
 
-### Whey there is no <_some feature_ > ?
+### Why there is no <_some feature_ > ?
 I have been using this script as part of my dataviz prototyping. While this serves my purpose in what I do, I have not been using it for other applications (i.e consumer app). If you find some key features are missing, I'd love to hear about it.
 
 
