@@ -1,4 +1,4 @@
-var API = require('./api.js');
+var API = require('./src/api.js');
 
 var setting = [{
     path:'/data',
@@ -47,11 +47,12 @@ var setting = [{
                 }
             },
             id:{
-                stub_type:'unique_num',
+                stub_type:'number',
                 starting_num:100,
+                increments:1,
                 max_num:8000,
                 min_num:1000,
-                type:'random', //'incremental'
+                type:'incremental', //'incremental'
             },
             text:{
                 stub_type:'lipsum',

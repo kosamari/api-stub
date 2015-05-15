@@ -1,7 +1,7 @@
 {
   "name": "api-stub",
   "version": "0.0.1",
-  "description": "Simple, No dependency, temporary API for your app",
+  "description": "Simple, no database, temporary API for your app",
   "main": "index.js",
   "repository": {
     "type": "git",
