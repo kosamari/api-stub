@@ -88,6 +88,7 @@ function API(endpointsConfig){
 
     function stopAPI(callback){
         server.close(function(){
+            log.apiServerStopped(portNum);
             apiStatus = false;
             startTime = undefined;
             portNum = undefined;

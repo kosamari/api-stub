@@ -12,6 +12,9 @@ var msg = {
     apiServerStarted :function(port){
         success('server is running on port ' + port);
     },
+    apiServerStopped :function(port){
+        success('server is running on ' + port +' successfully stopped');
+    },
     portNaN : function(port){
         err(port + ' is not a number, try something like 5000 or give 0 to choose landom port');
     },

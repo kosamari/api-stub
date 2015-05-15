@@ -36,9 +36,8 @@ var endpointSetting = {
     }
 }
 
-
+//test API server
 var apiserver = new API([]);
-// return true
 apiserver.start(3000, function(success){
     assert(success == true, 'Start server')
     apiserver.stop(function(success){
@@ -46,10 +45,9 @@ apiserver.start(3000, function(success){
     });
 });
 
-
+//test API data
 var data = new APIData(endpointSetting)
 var dataObj = JSON.parse(data.getJSONString())
-
 assert(dataObj.log.length == 10, 'length')
 assert(dataObj.log[0].id <= 500, 'max_num')
 assert(dataObj.log[0].id >= 100, 'min_num')
