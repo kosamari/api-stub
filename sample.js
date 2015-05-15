@@ -29,38 +29,43 @@ var setting = [{
     path:'/api',
     data: {
         status: 'success',
-        log:['///status*1///'],
+        log:['///status*500///'],
     },
     templates:{
         status:{
             status:'success',
+            amount2:{
+                data:function(){
+                    return Math.floor(Math.random()*100)
+                }
+            },
             amount:{
                 data:{
                     stub_type:'select',
                     choice:[100,200,300,400],
-                    type:'random' //'liner'
+                    type:'liner' //'liner' /'random_unique'/
                 }
             },
             id:{
                 stub_type:'unique_num',
                 starting_num:100,
-                increments:10,
                 max_num:8000,
                 min_num:1000,
-                type:'incremental', //'random'
+                type:'random', //'incremental'
             },
             text:{
                 stub_type:'lipsum',
-                max_char_length:100,
+                max_char_length:500,
+                min_char_length:200,
             },
             date:{
-                stub_type:'date',
-                template:'Y-M-D',
+                stub_type:'datetime',
+                output_format:'toUTCString',
                 type:'random', //incremental,
-                starting_date:'2014-01-01',
-                increments:1,
-                max_date:'2014-01-01',
-                min_date:'2014-01-31',
+                starting_datetime:'2014-01-01',
+                increments:86400000,
+                max_datetime:'f0',
+                min_datetime:'2014-01-01',
             }
         }
     }
@@ -71,4 +76,4 @@ apiserver.start(3000, function(){
     console.log(apiserver.profile.call(this));
 });
 // apiserver.port()
-// apiserver.stop()
+// apiserver.stop() 

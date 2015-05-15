@@ -1,10 +1,27 @@
 {
   "name": "api-stub",
   "version": "0.0.1",
-  "description": "",
-  "main": "api.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "Simple, No dependency, temporary API for your app",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kosamari/api-stub.git"
   },
-  "author": "Mariko Kosaka",
+  "author": "Mariko Kosaka (http://kosamari.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kosamari/api-stub/issues"
+  },
+  "scripts": {
+    "test": "node test/test.js"
+  },
+  "homepage": "https://github.com/kosamari/api-stub",
+  "keywords": [
+    "api",
+    "json",
+    "stubbing",
+    "stub",
+    "prototyping",
+    "mock-up"
+  ]
 }
