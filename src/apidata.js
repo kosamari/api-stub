@@ -211,10 +211,14 @@ function prepareTemplates(templates){
     }
   }
 
-  Object.keys(templates).map(function(t){
-    parseTemplate(templates[t]);
-  })
-  return templates;
+  if(templates){
+    Object.keys(templates).map(function(t){
+      parseTemplate(templates[t]);
+    })
+    return templates;
+  }else{
+    return [];
+  }
 }
 
 

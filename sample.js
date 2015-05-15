@@ -1,73 +1,45 @@
-var API = require('./src/api.js');
+var API = require('api-stub');
 
 var setting = [{
     path:'/data',
     data: {
         status: 'success',
-        log:['///log*0///','/// info*0 ///'],
-        data:{
-            active: true,
-            metadata: {
-                admin:false,
-                data:['/// info*0 ///']
-            }
-        },
+        data:['///item*10///'],
+        log:['///log*10///']
     },
     templates:{
-        info:{
-            media:'photo',
-            id:1,
-            editable:true,
-            message:'this is message'
-        },
-        log:{
-            test:'this is test'
-        }
-    }
-},
-{
-    path:'/api',
-    data: {
-        status: 'success',
-        log:['///status*500///'],
-    },
-    templates:{
-        status:{
-            status:'success',
-            amount2:{
-                data:function(){
-                    return Math.floor(Math.random()*100)
-                }
+        item:{
+            random_amount:function(){
+              return Math.floor(Math.random())
             },
             amount:{
                 data:{
                     stub_type:'select',
                     choice:[100,200,300,400],
-                    type:'liner' //'liner' /'random_unique'/
+                    type:'liner'
                 }
             },
             id:{
                 stub_type:'number',
-                starting_num:100,
-                increments:1,
                 max_num:8000,
                 min_num:1000,
-                type:'incremental', //'incremental'
+                type:'random'
             },
             text:{
                 stub_type:'lipsum',
-                max_char_length:500,
-                min_char_length:200,
+                min_char_length:100,
+                max_char_length:300,
             },
             date:{
                 stub_type:'datetime',
-                output_format:'toUTCString',
-                type:'random', //incremental,
+                output_format:'toYMDString',
+                type:'incremental',
                 starting_datetime:'2014-01-01',
-                increments:86400000,
-                max_datetime:'f0',
-                min_datetime:'2014-01-01',
+                increments:86400000
             }
+        },
+        log:{
+            message:'message'
         }
     }
 }];
@@ -76,5 +48,3 @@ var apiserver = new API(setting);
 apiserver.start(3000, function(){
     console.log(apiserver.profile.call(this));
 });
-// apiserver.port()
-// apiserver.stop() 
