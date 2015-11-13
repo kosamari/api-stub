@@ -208,6 +208,61 @@ toTimeString | `09:30:16 GMT-0400 (EDT)'`
 toUTCString | `Fri, 15 May 2015 13:30:16 GMT`
 toYMDString | `2015-05-15`
 
+## Headers
+
+Sometimes you need to mock an API, and also need to mock some headers e.g add CORS support.
+
+### Default Headers
+
+In this case, declare your config as an object instead of an array.
+
+These headers will be added to every response
+
+```javascript
+// api.js
+var API = require('api-stub');
+var config = {
+  defaultHeaders: [
+    {
+      name: 'Access-Control-Allow-Origin',
+      value: '*'
+    }
+  ],
+  endpoints: [
+    {
+      path:'/status',
+      data: {status: true}
+    }
+  ]
+}
+var server = new API(config);
+server.start(3000);
+//then run the script `node api.js`
+
+```
+
+### Endpoint Specific Headers
+
+You can also add headers to an individual endpoint. These will be applied after any default headers (if applicable)
+
+```javascript
+// api.js
+var API = require('api-stub');
+var config = [{
+  path:'/status',
+  data: {status: true},
+  headers: [
+    {
+      name: 'My-Header-Name',
+      value: 'my header value'
+    }
+  ]
+}]
+var server = new API(config);
+server.start(3000);
+//then run the script `node api.js`
+
+```
 
 ## FAQ
 ### Yet another API mock up tool huh?

@@ -1,6 +1,7 @@
 var http = require('http');
 var log = require('./message.js');
-var APIData = require('./apidata.js')
+var APIData = require('./apidata.js');
+var util = require('util');
 
 /*
 Check if setting object passed from API constructor
@@ -22,6 +23,14 @@ function verifyEndpointSettings(endpointSettings, index){
   return state;
 }
 
+function addHeaders(response, headers) {
+  if (headers) {
+    headers.forEach(function (header) {
+      response.setHeader(header.name, header.value);
+    });
+  }
+}
+
 /*
 API constructor
 On initialize, it will...
@@ -29,7 +38,9 @@ On initialize, it will...
   - create http server
 
 Arguments:
-  - endpintsConfig (Array): array of endpoint setting objects
+  - config (Array): array of endpoint setting objects
+  - or
+  - config (Object): object with 2 properties, defaultHeaders (array of header name value) and endpoints (array of endpoint setting objects)
 
 Return: Object with access to methods
   - start(port number, [callback]): start http server on specified port number
@@ -41,12 +52,21 @@ Return: Object with access to methods
       - running_since(DateTime): time the http server started,
       - path(Array) : list of paths that is set for this API
 */
-function API(endpointsConfig){
+function API(config){
   var portNum;
   var apiStatus = false;
   var startTime;
   var endpoints = {};
-  var that = this
+  var defaultHeaders = [];
+  var that = this;
+
+  var endpointsConfig;
+  if (util.isArray(config)) {
+    endpointsConfig = config;
+  } else {
+    endpointsConfig = config.endpoints;
+  }
+
   // Parse endpointsConfig and create Endpoint object for each path
   endpointsConfig.map(function(endpointSettings, i){
     if(verifyEndpointSettings(endpointSettings, i)){
@@ -54,14 +74,22 @@ function API(endpointsConfig){
     }
   });
 
-  // Create http server
+  // Set default headers
+  if (config.hasOwnProperty('defaultHeaders')) {
+    defaultHeaders = config.defaultHeaders;
+  }
+
+    // Create http server
   var server =  http.createServer(function (req, res) {
     if(endpoints[req.url]){
+      addHeaders(res, defaultHeaders);
+      addHeaders(res, endpoints[req.url].headers);
       res.writeHead(200, {'Content-Type': 'application/json'});
       res.end(endpoints[req.url].getJSONString());
+    } else {
+      res.writeHead(200, {'Content-Type': 'text/plain'});
+      res.end('No Data Specified here');
     }
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('No Data Specified here');
   });
 
   server.on('error', function(e){

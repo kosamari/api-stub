@@ -258,6 +258,7 @@ Return: Object with access to methods
 */
 function APIData(endpointSettings){
   var apidata = cloneAndInvoke(endpointSettings.data);
+  var headers = endpointSettings.headers;
   var instructions = parseData(apidata)
   var templates = prepareTemplates(endpointSettings.templates);
 
@@ -268,7 +269,8 @@ function APIData(endpointSettings){
   }
 
   return {
-    getJSONString: getJSONString
+    getJSONString: getJSONString,
+    headers: headers
   };
 }
 
