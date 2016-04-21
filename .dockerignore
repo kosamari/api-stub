@@ -1,0 +1,10 @@
+docker-compose.yml
+Dockerfile
+.dockerignore
+.gitignore
+.idea/
+LICENSE
+node_modules/
+README.md
+test/
+.travis.yml
