@@ -1,6 +1,6 @@
 {
   "name": "api-stub",
-  "version": "0.0.2",
+  "version": "0.2.0",
   "description": "Simple, no database, temporary API for your app",
   "main": "index.js",
   "repository": {
@@ -13,6 +13,7 @@
     "url": "https://github.com/kosamari/api-stub/issues"
   },
   "scripts": {
+    "start": "node server.js",
     "test": "node test/test.js"
   },
   "homepage": "https://github.com/kosamari/api-stub",
@@ -23,5 +24,8 @@
     "stub",
     "prototyping",
     "mock-up"
-  ]
+  ],
+  "dependencies": {
+    "request": "^2.72.0"
+  }
 }
