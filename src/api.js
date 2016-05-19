@@ -57,7 +57,7 @@ function API(endpointsConfig){
   // Create http server
   var server =  http.createServer(function (req, res) {
     if(endpoints[req.url]){
-      res.writeHead(200, {'Content-Type': 'application/json'});
+      res.writeHead(200, {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'});
       res.end(endpoints[req.url].getJSONString());
     }
     res.writeHead(200, {'Content-Type': 'text/plain'});
