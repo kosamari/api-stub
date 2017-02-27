@@ -33,7 +33,7 @@ If you need repeated dataset, you can specifying `template` field, and use place
 ```
 var config = [{
   path:'/random',
-  data: [/// info * 3 ///] // [templatename] * [how many to repeat]
+  data: ['/// info * 3 ///'], // [templatename] * [how many to repeat]
   templates:{
     info:{
       message:'Hi there!'
@@ -51,7 +51,7 @@ There are few built in templates to generate data dynamically. (Check Templates 
 ```
 var config = [{
   path:'/id',
-  data: [/// users * 3 ///]
+  data: ['/// users * 3 ///'],
   templates:{
     users:{
       id:{
@@ -59,7 +59,7 @@ var config = [{
         starting_num:1000,
         increments:1,
         type:'incremental'
-      },
+      }
     }
   }
 }]
@@ -72,7 +72,7 @@ You can also assign your custom function to any key. When initializing API serve
 ```
 var config = [{
   path:'/random',
-  data: {value: function(){Math.random();}}
+  data: {value: function(){return Math.random();}}
 }]
 
 ```
