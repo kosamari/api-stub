@@ -16,10 +16,10 @@ var msg = {
     success('server is running on ' + port +' successfully stopped');
   },
   portNaN : function(port){
-    err(port + ' is not a number, try something like 5000 or give 0 to choose landom port');
+    err(port + ' is not a number, try something like 5000 or give 0 to choose random port');
   },
   portNotDefined : function(){
-    err('Could not find port number. try something like 5000 or give 0 to choose landom port');
+    err('Could not find port number. try something like 5000 or give 0 to choose random port');
   },
   portAlreadyUsed : function(port){
     err(port + ' is alreay used by other service, try other numbers');
